@@ -1,7 +1,7 @@
 
-# Schéma CRM - Base de données SQL
+# Schéma CRM - Base de données SQL (SQLite 3.37.2)
 
-Ce fichier SQL crée un système CRM avec les tables **contacts**, **entreprises**, **opportunités** et **interactions**. Chaque table est commentée en français pour faciliter la compréhension.
+Ce fichier SQL crée un système CRM compatible avec SQLite3 avec les tables **contacts**, **entreprises**, **opportunités** et **interactions**. Chaque table est commentée en français pour faciliter la compréhension.
 
 ## Création des tables
 
@@ -9,53 +9,53 @@ Ce fichier SQL crée un système CRM avec les tables **contacts**, **entreprises
 -- Table des entreprises (companies)
 -- Cette table stocke les informations relatives aux entreprises clientes.
 CREATE TABLE companies (
-    company_id INT PRIMARY KEY AUTO_INCREMENT,  -- Identifiant unique de l'entreprise
-    company_name VARCHAR(100) NOT NULL,         -- Nom de l'entreprise
-    industry VARCHAR(50),                       -- Secteur d'activité de l'entreprise
-    website VARCHAR(100),                       -- Site web de l'entreprise
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'enregistrement
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Date de mise à jour
+    company_id INTEGER PRIMARY KEY AUTOINCREMENT,  -- Identifiant unique de l'entreprise
+    company_name TEXT NOT NULL,                   -- Nom de l'entreprise
+    industry TEXT,                                -- Secteur d'activité de l'entreprise
+    website TEXT,                                 -- Site web de l'entreprise
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,    -- Date de création de l'enregistrement
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP     -- Date de mise à jour
 );
 
 -- Table des contacts (contacts)
 -- Cette table stocke les informations des contacts individuels associés aux entreprises.
 CREATE TABLE contacts (
-    contact_id INT PRIMARY KEY AUTO_INCREMENT,  -- Identifiant unique du contact
-    first_name VARCHAR(50) NOT NULL,            -- Prénom du contact
-    last_name VARCHAR(50) NOT NULL,             -- Nom de famille du contact
-    email VARCHAR(100) UNIQUE NOT NULL,         -- Adresse email du contact (doit être unique)
-    phone VARCHAR(20),                          -- Numéro de téléphone du contact
-    company_id INT,                             -- Référence à l'entreprise associée
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'enregistrement
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de mise à jour
+    contact_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Identifiant unique du contact
+    first_name TEXT NOT NULL,                     -- Prénom du contact
+    last_name TEXT NOT NULL,                      -- Nom de famille du contact
+    email TEXT UNIQUE NOT NULL,                   -- Adresse email du contact (doit être unique)
+    phone TEXT,                                   -- Numéro de téléphone du contact
+    company_id INTEGER,                           -- Référence à l'entreprise associée
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,    -- Date de création de l'enregistrement
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,    -- Date de mise à jour
     FOREIGN KEY (company_id) REFERENCES companies(company_id) -- Clé étrangère vers la table entreprises
 );
 
 -- Table des opportunités (opportunities)
 -- Cette table suit les opportunités de vente associées aux contacts ou aux entreprises.
 CREATE TABLE opportunities (
-    opportunity_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique de l'opportunité
-    opportunity_name VARCHAR(100) NOT NULL,        -- Nom de l'opportunité
-    contact_id INT,                                -- Référence au contact associé
-    company_id INT,                                -- Référence à l'entreprise associée
-    deal_value DECIMAL(10, 2),                     -- Valeur estimée du contrat/de la vente
-    stage VARCHAR(50) NOT NULL,                    -- État de l'opportunité (ex. : "négociation", "proposition")
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'opportunité
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de mise à jour
-    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id), -- Clé étrangère vers la table contacts
-    FOREIGN KEY (company_id) REFERENCES companies(company_id) -- Clé étrangère vers la table entreprises
+    opportunity_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Identifiant unique de l'opportunité
+    opportunity_name TEXT NOT NULL,                  -- Nom de l'opportunité
+    contact_id INTEGER,                              -- Référence au contact associé
+    company_id INTEGER,                              -- Référence à l'entreprise associée
+    deal_value REAL,                                 -- Valeur estimée du contrat/de la vente
+    stage TEXT NOT NULL,                             -- État de l'opportunité (ex. : "négociation", "proposition")
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,       -- Date de création de l'opportunité
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,       -- Date de mise à jour
+    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id),  -- Clé étrangère vers la table contacts
+    FOREIGN KEY (company_id) REFERENCES companies(company_id)  -- Clé étrangère vers la table entreprises
 );
 
 -- Table des interactions (interactions)
 -- Cette table enregistre les interactions entre l'entreprise et les contacts (emails, appels, réunions).
 CREATE TABLE interactions (
-    interaction_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique de l'interaction
-    contact_id INT,                                -- Référence au contact associé
-    interaction_type VARCHAR(50) NOT NULL,         -- Type d'interaction (ex. : "email", "appel", "réunion")
-    interaction_date TIMESTAMP NOT NULL,           -- Date de l'interaction
-    notes TEXT,                                    -- Notes sur l'interaction
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'interaction
-    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id) -- Clé étrangère vers la table contacts
+    interaction_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Identifiant unique de l'interaction
+    contact_id INTEGER,                               -- Référence au contact associé
+    interaction_type TEXT NOT NULL,                   -- Type d'interaction (ex. : "email", "appel", "réunion")
+    interaction_date TEXT NOT NULL,                   -- Date de l'interaction
+    notes TEXT,                                       -- Notes sur l'interaction
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,        -- Date de création de l'interaction
+    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id)  -- Clé étrangère vers la table contacts
 );
 ```
 
@@ -114,7 +114,7 @@ INSERT INTO interactions (contact_id, interaction_type, interaction_date, notes)
 ## Instructions pour exécuter ce code
 
 1. Copiez le code SQL ci-dessus.
-2. Collez-le dans l'éditeur SQL de **MyCompiler** ou tout autre environnement SQL compatible.
+2. Collez-le dans l'éditeur SQLite de **MyCompiler** ou tout autre environnement SQLite compatible.
 3. Exécutez-le pour créer les tables, insérer les données, et voir les résultats.
 
 Ce code crée une base de données CRM basique avec 20 contacts, 5 entreprises, des opportunités de vente, et des interactions enregistrées.
