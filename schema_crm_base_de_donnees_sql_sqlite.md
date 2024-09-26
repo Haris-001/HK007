@@ -6,7 +6,6 @@ Ce fichier SQL crée un système CRM compatible avec SQLite3 avec les tables **c
 ## Création de la BD et des tables
 
 ```sql
-CREATE DATABASE CRM;
 -- Table des entreprises (companies)
 -- Cette table stocke les informations relatives aux entreprises clientes.
 CREATE TABLE companies (
