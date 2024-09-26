@@ -1,83 +1,120 @@
 
-# Schéma de base de données CRM
+# Schéma CRM - Base de données SQL
 
-Ce document décrit un schéma de base de données pour un CRM (Customer Relationship Management). Ce schéma est conçu pour gérer les contacts, les entreprises, les opportunités de vente, et les interactions avec les clients.
+Ce fichier SQL crée un système CRM avec les tables **contacts**, **entreprises**, **opportunités** et **interactions**. Chaque table est commentée en français pour faciliter la compréhension.
 
-## Table des `contacts`
-
-La table `contacts` stocke les informations personnelles des clients ou prospects. Chaque contact est lié à une entreprise via une clé étrangère.
+## Création des tables
 
 ```sql
--- Table des contacts
-CREATE TABLE contacts (
-    contact_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique pour chaque contact
-    first_name VARCHAR(50), -- Prénom du contact
-    last_name VARCHAR(50), -- Nom de famille du contact
-    email VARCHAR(100) UNIQUE, -- Adresse email du contact (doit être unique)
-    phone VARCHAR(20), -- Numéro de téléphone du contact
-    company_id INT, -- Référence à l'entreprise associée (clé étrangère vers la table des entreprises)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création du contact
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de mise à jour du contact
-    FOREIGN KEY (company_id) REFERENCES companies(company_id) -- Clé étrangère vers la table des entreprises
-);
-```
-
-## Table des `entreprises`
-
-La table `companies` stocke les informations relatives aux entreprises clientes.
-
-```sql
--- Table des entreprises
+-- Table des entreprises (companies)
+-- Cette table stocke les informations relatives aux entreprises clientes.
 CREATE TABLE companies (
-    company_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique pour chaque entreprise
-    company_name VARCHAR(100), -- Nom de l'entreprise
-    industry VARCHAR(50), -- Secteur d'activité de l'entreprise
-    website VARCHAR(100), -- Site web de l'entreprise
+    company_id INT PRIMARY KEY AUTO_INCREMENT,  -- Identifiant unique de l'entreprise
+    company_name VARCHAR(100) NOT NULL,         -- Nom de l'entreprise
+    industry VARCHAR(50),                       -- Secteur d'activité de l'entreprise
+    website VARCHAR(100),                       -- Site web de l'entreprise
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'enregistrement
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Date de mise à jour de l'enregistrement
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- Date de mise à jour
 );
-```
 
-## Table des `opportunités`
+-- Table des contacts (contacts)
+-- Cette table stocke les informations des contacts individuels associés aux entreprises.
+CREATE TABLE contacts (
+    contact_id INT PRIMARY KEY AUTO_INCREMENT,  -- Identifiant unique du contact
+    first_name VARCHAR(50) NOT NULL,            -- Prénom du contact
+    last_name VARCHAR(50) NOT NULL,             -- Nom de famille du contact
+    email VARCHAR(100) UNIQUE NOT NULL,         -- Adresse email du contact (doit être unique)
+    phone VARCHAR(20),                          -- Numéro de téléphone du contact
+    company_id INT,                             -- Référence à l'entreprise associée
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'enregistrement
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de mise à jour
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) -- Clé étrangère vers la table entreprises
+);
 
-La table `opportunities` permet de suivre les opportunités de vente associées à un contact ou à une entreprise.
-
-```sql
--- Table des opportunités de vente
+-- Table des opportunités (opportunities)
+-- Cette table suit les opportunités de vente associées aux contacts ou aux entreprises.
 CREATE TABLE opportunities (
-    opportunity_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique pour chaque opportunité
-    opportunity_name VARCHAR(100), -- Nom de l'opportunité (par exemple, "Contrat annuel de maintenance")
-    contact_id INT, -- Référence au contact associé
-    company_id INT, -- Référence à l'entreprise associée
-    deal_value DECIMAL(10, 2), -- Valeur financière de l'opportunité
-    stage VARCHAR(50), -- Statut de l'opportunité (par exemple, "En négociation", "Fermée")
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'enregistrement
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de mise à jour de l'enregistrement
-    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id), -- Clé étrangère vers la table des contacts
-    FOREIGN KEY (company_id) REFERENCES companies(company_id) -- Clé étrangère vers la table des entreprises
+    opportunity_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique de l'opportunité
+    opportunity_name VARCHAR(100) NOT NULL,        -- Nom de l'opportunité
+    contact_id INT,                                -- Référence au contact associé
+    company_id INT,                                -- Référence à l'entreprise associée
+    deal_value DECIMAL(10, 2),                     -- Valeur estimée du contrat/de la vente
+    stage VARCHAR(50) NOT NULL,                    -- État de l'opportunité (ex. : "négociation", "proposition")
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'opportunité
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de mise à jour
+    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id), -- Clé étrangère vers la table contacts
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) -- Clé étrangère vers la table entreprises
+);
+
+-- Table des interactions (interactions)
+-- Cette table enregistre les interactions entre l'entreprise et les contacts (emails, appels, réunions).
+CREATE TABLE interactions (
+    interaction_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique de l'interaction
+    contact_id INT,                                -- Référence au contact associé
+    interaction_type VARCHAR(50) NOT NULL,         -- Type d'interaction (ex. : "email", "appel", "réunion")
+    interaction_date TIMESTAMP NOT NULL,           -- Date de l'interaction
+    notes TEXT,                                    -- Notes sur l'interaction
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'interaction
+    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id) -- Clé étrangère vers la table contacts
 );
 ```
 
-## Table des `interactions`
-
-La table `interactions` enregistre les interactions entre les représentants de l'entreprise et les contacts, comme les appels, les emails, ou les réunions.
+## Insertion des données
 
 ```sql
--- Table des interactions (emails, appels, réunions)
-CREATE TABLE interactions (
-    interaction_id INT PRIMARY KEY AUTO_INCREMENT, -- Identifiant unique pour chaque interaction
-    contact_id INT, -- Référence au contact avec lequel l'interaction a eu lieu
-    interaction_type VARCHAR(50), -- Type d'interaction (par exemple, "email", "appel", "réunion")
-    interaction_date TIMESTAMP, -- Date de l'interaction
-    notes TEXT, -- Notes ou résumé de l'interaction
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création de l'enregistrement
-    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id) -- Clé étrangère vers la table des contacts
-);
+-- Insertion de données dans la table entreprises
+INSERT INTO companies (company_name, industry, website) VALUES
+('TechCorp', 'Technologie', 'www.techcorp.com'),
+('MediSolutions', 'Santé', 'www.medisolutions.com'),
+('FinServe', 'Finance', 'www.finserve.com'),
+('GreenEnergy', 'Énergie', 'www.greenenergy.com'),
+('EduLearn', 'Éducation', 'www.edulearn.com');
+
+-- Insertion de données dans la table contacts (20 contacts au total)
+INSERT INTO contacts (first_name, last_name, email, phone, company_id) VALUES
+('John', 'Doe', 'john.doe@techcorp.com', '123-456-7890', 1),
+('Jane', 'Smith', 'jane.smith@medisolutions.com', '234-567-8901', 2),
+('Michael', 'Brown', 'michael.brown@finserve.com', '345-678-9012', 3),
+('Emily', 'Davis', 'emily.davis@greenenergy.com', '456-789-0123', 4),
+('Daniel', 'Wilson', 'daniel.wilson@edulearn.com', '567-890-1234', 5),
+-- Ajout de 15 autres contacts fictifs
+('Alice', 'Taylor', 'alice.taylor@techcorp.com', '111-222-3333', 1),
+('Robert', 'Miller', 'robert.miller@medisolutions.com', '222-333-4444', 2),
+('James', 'Clark', 'james.clark@finserve.com', '333-444-5555', 3),
+('Sophia', 'Martinez', 'sophia.martinez@greenenergy.com', '444-555-6666', 4),
+('Ethan', 'Anderson', 'ethan.anderson@edulearn.com', '555-666-7777', 5),
+('Olivia', 'Garcia', 'olivia.garcia@techcorp.com', '666-777-8888', 1),
+('Benjamin', 'Thomas', 'benjamin.thomas@medisolutions.com', '777-888-9999', 2),
+('Lucas', 'Jackson', 'lucas.jackson@finserve.com', '888-999-0000', 3),
+('Ava', 'White', 'ava.white@greenenergy.com', '999-000-1111', 4),
+('William', 'Harris', 'william.harris@edulearn.com', '000-111-2222', 5),
+('Sophia', 'Johnson', 'sophia.johnson@techcorp.com', '123-123-1234', 1),
+('Henry', 'Lewis', 'henry.lewis@medisolutions.com', '234-234-2345', 2),
+('Liam', 'Walker', 'liam.walker@finserve.com', '345-345-3456', 3),
+('Charlotte', 'Young', 'charlotte.young@greenenergy.com', '456-456-4567', 4),
+('Amelia', 'King', 'amelia.king@edulearn.com', '567-567-5678', 5);
+
+-- Insertion de données dans la table opportunités
+INSERT INTO opportunities (opportunity_name, contact_id, company_id, deal_value, stage) VALUES
+('Nouvelle plateforme web', 1, 1, 50000.00, 'Proposition'),
+('Service de télémédecine', 2, 2, 75000.00, 'Négociation'),
+('Consultation financière', 3, 3, 100000.00, 'Clôturé'),
+('Solution d'énergie renouvelable', 4, 4, 200000.00, 'En discussion'),
+('Programme de formation', 5, 5, 15000.00, 'En discussion');
+
+-- Insertion de données dans la table interactions
+INSERT INTO interactions (contact_id, interaction_type, interaction_date, notes) VALUES
+(1, 'email', '2023-09-20 10:00:00', 'Discussion initiale sur la plateforme web'),
+(2, 'appel', '2023-09-21 11:30:00', 'Négociation des termes du service de télémédecine'),
+(3, 'réunion', '2023-09-22 14:00:00', 'Consultation sur les finances de l'entreprise'),
+(4, 'email', '2023-09-23 09:15:00', 'Présentation de la solution d'énergie'),
+(5, 'appel', '2023-09-24 16:45:00', 'Discussion préliminaire sur le programme de formation');
 ```
 
-## Améliorations possibles :
-- Ajout d'index sur les colonnes fréquemment recherchées, comme les emails ou les noms d'entreprises.
-- Ajout d'une table de `utilisateurs` pour suivre les représentants ou les agents commerciaux.
-- Création d'une table de `tâches` pour organiser le suivi des actions à entreprendre pour chaque opportunité.
+## Instructions pour exécuter ce code
 
-Ce schéma peut être personnalisé en fonction des besoins spécifiques de votre entreprise ou de votre application CRM.
+1. Copiez le code SQL ci-dessus.
+2. Collez-le dans l'éditeur SQL de **MyCompiler** ou tout autre environnement SQL compatible.
+3. Exécutez-le pour créer les tables, insérer les données, et voir les résultats.
+
+Ce code crée une base de données CRM basique avec 20 contacts, 5 entreprises, des opportunités de vente, et des interactions enregistrées.
