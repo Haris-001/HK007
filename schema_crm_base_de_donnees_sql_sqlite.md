@@ -99,15 +99,15 @@ INSERT INTO opportunities (opportunity_name, contact_id, company_id, deal_value,
 ('Nouvelle plateforme web', 1, 1, 50000.00, 'Proposition'),
 ('Service de télémédecine', 2, 2, 75000.00, 'Négociation'),
 ('Consultation financière', 3, 3, 100000.00, 'Clôturé'),
-('Solution d énergie renouvelable', 4, 4, 200000.00, 'En discussion'),
+('Solution d\'énergie renouvelable', 4, 4, 200000.00, 'En discussion'),
 ('Programme de formation', 5, 5, 15000.00, 'En discussion');
 
 -- Insertion de données dans la table interactions
 INSERT INTO interactions (contact_id, interaction_type, interaction_date, notes) VALUES
 (1, 'email', '2023-09-20 10:00:00', 'Discussion initiale sur la plateforme web'),
 (2, 'appel', '2023-09-21 11:30:00', 'Négociation des termes du service de télémédecine'),
-(3, 'réunion', '2023-09-22 14:00:00', 'Consultation sur les finances de l'entreprise'),
-(4, 'email', '2023-09-23 09:15:00', 'Présentation de la solution d'énergie'),
+(3, 'réunion', '2023-09-22 14:00:00', 'Consultation sur les finances de l\'entreprise'),
+(4, 'email', '2023-09-23 09:15:00', 'Présentation de la solution d\'énergie'),
 (5, 'appel', '2023-09-24 16:45:00', 'Discussion préliminaire sur le programme de formation');
 ```
 
