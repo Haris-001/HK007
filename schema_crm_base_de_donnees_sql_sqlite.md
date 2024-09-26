@@ -77,7 +77,7 @@ INSERT INTO contacts (first_name, last_name, email, phone, company_id) VALUES
 ('Michael', 'Brown', 'michael.brown@finserve.com', '345-678-9012', 3),
 ('Emily', 'Davis', 'emily.davis@greenenergy.com', '456-789-0123', 4),
 ('Daniel', 'Wilson', 'daniel.wilson@edulearn.com', '567-890-1234', 5),
--- Ajout de 15 autres contacts fictifs
+-- Ajout de 15 autres contacts fictifs avec des e-mails uniques
 ('Alice', 'Taylor', 'alice.taylor@techcorp.com', '111-222-3333', 1),
 ('Robert', 'Miller', 'robert.miller@medisolutions.com', '222-333-4444', 2),
 ('James', 'Clark', 'james.clark@finserve.com', '333-444-5555', 3),
@@ -88,26 +88,31 @@ INSERT INTO contacts (first_name, last_name, email, phone, company_id) VALUES
 ('Lucas', 'Jackson', 'lucas.jackson@finserve.com', '888-999-0000', 3),
 ('Ava', 'White', 'ava.white@greenenergy.com', '999-000-1111', 4),
 ('William', 'Harris', 'william.harris@edulearn.com', '000-111-2222', 5),
-('Sophia', 'Johnson', 'sophia.johnson@techcorp.com', '123-123-1234', 1),
-('Henry', 'Lewis', 'henry.lewis@medisolutions.com', '234-234-2345', 2),
-('Liam', 'Walker', 'liam.walker@finserve.com', '345-345-3456', 3),
-('Charlotte', 'Young', 'charlotte.young@greenenergy.com', '456-456-4567', 4),
-('Amelia', 'King', 'amelia.king@edulearn.com', '567-567-5678', 5);
+('Sophia', 'Johnson', 'sophia.johnson@techcorp2.com', '123-123-1234', 1),
+('Henry', 'Lewis', 'henry.lewis@medisolutions2.com', '234-234-2345', 2),
+('Liam', 'Walker', 'liam.walker@finserve2.com', '345-345-3456', 3),
+('Charlotte', 'Young', 'charlotte.young@greenenergy2.com', '456-456-4567', 4),
+('Amelia', 'King', 'amelia.king@edulearn2.com', '567-567-5678', 5),
+('David', 'Scott', 'david.scott@techcorp.com', '678-678-6789', 1),
+('Mia', 'Roberts', 'mia.roberts@medisolutions.com', '789-789-7890', 2),
+('Noah', 'Harris', 'noah.harris@finserve.com', '890-890-8901', 3),
+('Chloe', 'Lee', 'chloe.lee@greenenergy.com', '901-901-9012', 4),
+('Elijah', 'Lopez', 'elijah.lopez@edulearn.com', '012-012-0123', 5);
 
 -- Insertion de données dans la table opportunités
 INSERT INTO opportunities (opportunity_name, contact_id, company_id, deal_value, stage) VALUES
 ('Nouvelle plateforme web', 1, 1, 50000.00, 'Proposition'),
 ('Service de télémédecine', 2, 2, 75000.00, 'Négociation'),
 ('Consultation financière', 3, 3, 100000.00, 'Clôturé'),
-('Solution d\'énergie renouvelable', 4, 4, 200000.00, 'En discussion'),
+('Solution d énergie renouvelable', 4, 4, 200000.00, 'En discussion'),
 ('Programme de formation', 5, 5, 15000.00, 'En discussion');
 
 -- Insertion de données dans la table interactions
 INSERT INTO interactions (contact_id, interaction_type, interaction_date, notes) VALUES
 (1, 'email', '2023-09-20 10:00:00', 'Discussion initiale sur la plateforme web'),
 (2, 'appel', '2023-09-21 11:30:00', 'Négociation des termes du service de télémédecine'),
-(3, 'réunion', '2023-09-22 14:00:00', 'Consultation sur les finances de l\'entreprise'),
-(4, 'email', '2023-09-23 09:15:00', 'Présentation de la solution d\'énergie'),
+(3, 'reunion', '2023-09-22 14:00:00', 'Consultation sur les finances de l entreprise'),
+(4, 'email', '2023-09-23 09:15:00', 'Présentation de la solution d énergie'),
 (5, 'appel', '2023-09-24 16:45:00', 'Discussion préliminaire sur le programme de formation');
 ```
 
